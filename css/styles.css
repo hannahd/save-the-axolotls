@@ -339,6 +339,23 @@ figure { margin: 22px 0; }
 .taco-party svg { width: 56px; height: 34px; }
 @keyframes fadeinout { 0% { opacity: 0; } 15%, 80% { opacity: 1; } 100% { opacity: 0; } }
 
+/* ---------- Quiz confetti ---------- */
+[hidden] { display: none !important; }
+.quiz-done { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; margin-top: 20px; }
+.quiz-done-text { margin: 0; font-size: 1.25rem; }
+.confetti {
+  position: absolute; top: -20px; width: 10px; height: 16px; border-radius: 3px;
+  animation: confetti-fall linear forwards;
+}
+.confetti.round { width: 12px; height: 12px; border-radius: 50%; }
+.confetti-taco { width: 52px; height: 32px; top: -40px; animation-name: confetti-fall; }
+@keyframes confetti-fall {
+  0% { transform: translate(0, 0) rotate(var(--r0)); opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translate(var(--dx), calc(100vh + 60px)) rotate(var(--r1)); opacity: 0; }
+}
+.party-pop { font-size: 1.8rem; line-height: 34px; }
+
 /* ---------- Bigger screens ---------- */
 @media (min-width: 700px) {
   .facts { grid-template-columns: repeat(2, 1fr); }
@@ -363,17 +380,20 @@ figure { margin: 22px 0; }
   animation-play-state: paused !important;
 }
 
-/* ---------- Reduced motion: no looping movement at all ---------- */
+/* ---------- Reduced motion: no looping movement at all ----------
+   Used when the device's "Reduce motion" setting is on, or the address has ?calm.
+   If the visitor presses "Play animations", the page adds .motion-ok and these rules step aside. */
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  .dancing .axo-dancer, .dancing .axo-arm-left, .dancing .axo-arm-right,
-  .dancing .axo-gills-left, .dancing .axo-gills-right, .dancing .axo-tail,
-  .axo-eyes, .quiz-axo.cheer { animation: none !important; }
-  .bubbles { display: none; }
-  .big-bits .bit, .clear-water, .muddy { transition: none; }
-  .pouring .drips { animation: none; }
-  .btn, .part-btn, .quiz-answer, .taco-btn { transition: none; }
+  html:not(.motion-ok) { scroll-behavior: auto; }
+  html:not(.motion-ok) .dancing .axo-dancer, html:not(.motion-ok) .dancing .axo-arm-left, html:not(.motion-ok) .dancing .axo-arm-right,
+  html:not(.motion-ok) .dancing .axo-gills-left, html:not(.motion-ok) .dancing .axo-gills-right, html:not(.motion-ok) .dancing .axo-tail,
+  html:not(.motion-ok) .axo-eyes, html:not(.motion-ok) .quiz-axo.cheer { animation: none !important; }
+  html:not(.motion-ok) .bubbles { display: none; }
+  html:not(.motion-ok) .big-bits .bit, html:not(.motion-ok) .clear-water, html:not(.motion-ok) .muddy { transition: none; }
+  html:not(.motion-ok) .pouring .drips { animation: none; }
+  html:not(.motion-ok) .btn, html:not(.motion-ok) .part-btn, html:not(.motion-ok) .quiz-answer, html:not(.motion-ok) .taco-btn { transition: none; }
 }
-/* Same calm version when the address ends in ?calm (used for testing) */
-.reduce-motion .axolotl *, .reduce-motion .axo-eyes { animation: none !important; }
-.reduce-motion .bubbles { display: none; }
+.reduce-motion:not(.motion-ok) .axolotl *, .reduce-motion:not(.motion-ok) .axo-eyes { animation: none !important; }
+.reduce-motion:not(.motion-ok) .bubbles { display: none; }
+.reduce-motion:not(.motion-ok) .quiz-axo.cheer, .reduce-motion:not(.motion-ok) .pouring .drips { animation: none !important; }
+.reduce-motion:not(.motion-ok) .big-bits .bit, .reduce-motion:not(.motion-ok) .clear-water, .reduce-motion:not(.motion-ok) .muddy { transition: none; }
