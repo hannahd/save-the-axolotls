@@ -17,6 +17,13 @@ cd ~/fll && python3 -m http.server 8123
 
 Then open <http://localhost:8123> in a browser. Press `Ctrl + C` in the terminal to stop it.
 
+## Share a Spanish link
+
+Add `?lang=es` to the end of the address to open the site in Spanish, for example
+`https://YOUR-USERNAME.github.io/save-the-axolotls/?lang=es`. Use `?lang=en` for English.
+When a visitor switches languages, the address bar updates too, so copying the link shares that language.
+Add `&calm=1` for a link that opens with animations off, for example `?lang=es&calm=1`.
+
 ## What each file does
 
 | File | What it holds |
@@ -43,11 +50,18 @@ Then open <http://localhost:8123> in a browser. Press `Ctrl + C` in the terminal
 1. **Phone and tablet:** make the browser window narrow, or use your browser's device view.
 2. **Keyboard:** press `Tab` to move between buttons and `Enter` or `Space` to press them. You should always see a dark ring around the focused button.
 3. **Language:** press English / Español at the top. Every word, button, and quiz answer should switch.
-4. **Pause animations:** the button at the top stops the dancing, blinking, bubbles, and Carl's leaves. Your choice is remembered.
+4. **Pause / Play animations:** the button at the top switches the page to the calm version (below) and
+   says "Play animations" while motion is off. Press it again to turn motion back on. The choice is remembered,
+   and the address bar adds `calm=1` while motion is off, so a copied link opens the same way.
 5. **Calm (reduced motion) version:** turn on "Reduce motion" in your computer or tablet settings, or open
-   `index.html?calm` (for example <http://localhost:8123/?calm>). The axolotl stands still, tacos show as a small row instead of falling, and Follow the water lights up all steps at once.
+   `index.html?calm=1` (for example <http://localhost:8123/?calm=1>). The page starts calm: the axolotl stands still,
+   tacos and confetti show as a small row instead of falling, and Follow the water lights up all steps at once.
+   The button says "Play animations"; pressing it turns motion on until that browser tab is closed.
+   The next visit starts calm again, and `?calm` always starts calm.
 6. **Taco Button:** press it many times fast. No more than 24 tacos appear, and they disappear on their own.
 7. **Filter demo, Follow the water, idea parts, quiz:** press every button and check that the text below explains what happened.
+8. **Quiz celebration:** answer all four right. Confetti falls and a "Congratulations!" box appears with a **Celebrate** button.
+   If you never picked a wrong answer, tacos fall with the confetti. Pick one wrong answer first, then fix it: confetti but no tacos.
 
 ## Privacy
 
