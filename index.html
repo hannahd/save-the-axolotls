@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Save the Axolotls | Dragons of the Sea</title>
+  <meta name="description" content="Kids from Dragons of the Sea share what they learned about axolotls, clean water, and rain gardens.">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!--
+  HOW THIS PAGE WORKS
+  - All words live in js/i18n.js (English and Spanish).
+  - An element with data-i18n="some.key" gets its text from that file.
+  - data-i18n-aria="some.key" fills in an aria-label (what screen readers say).
+-->
+
+<!-- Shared drawings that get reused with <use href="#..."> -->
+<svg class="defs" aria-hidden="true" focusable="false" width="0" height="0">
+  <defs>
+    <!-- TACO: filling on top, U-shaped shell -->
+    <symbol id="taco" viewBox="0 0 120 72">
+      <path d="M14 28 C12 18 20 12 28 16 C32 6 44 6 48 14 C54 4 68 4 72 14 C78 6 90 8 92 16 C100 12 108 18 106 28 Z" fill="#5DBB63" stroke="#153849" stroke-width="3" stroke-linejoin="round"/>
+      <circle cx="36" cy="20" r="6" fill="#E8574F" stroke="#153849" stroke-width="2"/>
+      <circle cx="62" cy="15" r="6" fill="#E8574F" stroke="#153849" stroke-width="2"/>
+      <circle cx="86" cy="21" r="5" fill="#E8574F" stroke="#153849" stroke-width="2"/>
+      <path d="M22 28 H98" stroke="#7A4A2A" stroke-width="6" stroke-linecap="round"/>
+      <path d="M6 26 C6 56 30 68 60 68 C90 68 114 56 114 26 Z" fill="#F7C548" stroke="#153849" stroke-width="3.5" stroke-linejoin="round"/>
+      <circle cx="34" cy="46" r="2.4" fill="#D99A2B"/><circle cx="60" cy="54" r="2.4" fill="#D99A2B"/><circle cx="86" cy="46" r="2.4" fill="#D99A2B"/><circle cx="48" cy="38" r="2" fill="#D99A2B"/><circle cx="74" cy="38" r="2" fill="#D99A2B"/>
+    </symbol>
+
+    <!-- BUBBLE -->
+    <symbol id="bubble" viewBox="0 0 20 20">
+      <circle cx="10" cy="10" r="8" fill="#EAF9FA" fill-opacity=".6" stroke="#086B88" stroke-width="1.6"/>
+      <circle cx="7" cy="7" r="2" fill="#fff"/>
+    </symbol>
+
+    <!-- LEAF -->
+    <symbol id="leaf" viewBox="0 0 40 40">
+      <path d="M6 34 C6 14 20 6 34 6 C34 22 26 34 6 34 Z" fill="#5DBB63" stroke="#153849" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M8 32 L28 12" stroke="#153849" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<a class="skip-link" href="#main" data-i18n="ui.skip"></a>
+
+<main id="main">
+
+<!-- ============ HERO: controls, dancing axolotl, headline ============ -->
+<section class="hero" aria-labelledby="hero-title">
+
+  <!-- Language and animation controls -->
+  <div class="hero-controls">
+    <div class="lang-switch" role="group" data-i18n-aria="ui.langGroup">
+      <button type="button" class="chip" data-lang="en" lang="en" aria-pressed="true">English</button>
+      <button type="button" class="chip" data-lang="es" lang="es" aria-pressed="false">Español</button>
+    </div>
+    <button type="button" class="chip pause-btn" id="pauseBtn" aria-pressed="false">
+      <span class="pause-icon" aria-hidden="true"></span>
+      <span data-i18n="ui.pause" class="pause-text"></span>
+    </button>
+  </div>
+
+  <div class="hero-art">
+    <!--
+      THE DANCING AXOLOTL
+      viewBox="0 0 260 240": the drawing's own size. It scales to fit any screen.
+      Parts: #axo-tail, #axo-body, #axo-arms, #axo-gills-left, #axo-gills-right, #axo-head, #axo-eyes, #axo-mouth
+    -->
+    <svg class="axolotl dancing" id="heroAxolotl" viewBox="0 0 260 240" aria-hidden="true" focusable="false">
+      <ellipse cx="130" cy="228" rx="70" ry="8" fill="#086B88" opacity=".15"/>
+      <g class="axo-dancer">
+        <!-- TAIL -->
+        <path id="axo-tail" class="axo-tail" d="M160 180 C200 186 226 170 232 146 C220 160 196 166 168 158 Z"
+              fill="#FBC6D8" stroke="#153849" stroke-width="3.5" stroke-linejoin="round"/>
+        <!-- BODY -->
+        <ellipse id="axo-body" cx="130" cy="176" rx="46" ry="40" fill="#F6A6C1" stroke="#153849" stroke-width="3.5"/>
+        <ellipse cx="130" cy="186" rx="26" ry="22" fill="#FDD9E5"/>
+        <!-- FEET -->
+        <ellipse cx="106" cy="214" rx="14" ry="8" fill="#F6A6C1" stroke="#153849" stroke-width="3"/>
+        <ellipse cx="154" cy="214" rx="14" ry="8" fill="#F6A6C1" stroke="#153849" stroke-width="3"/>
+        <!-- ARMS: they wave during the dance -->
+        <g id="axo-arms">
+          <path class="axo-arm-left"  d="M90 168 C74 160 66 150 70 142 C78 140 88 150 98 160" fill="#F6A6C1" stroke="#153849" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+          <path class="axo-arm-right" d="M170 168 C186 160 194 150 190 142 C182 140 172 150 162 160" fill="#F6A6C1" stroke="#153849" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+        </g>
+        <!-- GILLS: three feathery branches on each side -->
+        <g id="axo-gills-left" class="axo-gills axo-gills-left">
+          <path d="M66 70 C44 52 30 50 22 56" fill="none" stroke="#E5739B" stroke-width="9" stroke-linecap="round"/>
+          <path d="M62 88 C40 82 26 86 18 94" fill="none" stroke="#E5739B" stroke-width="9" stroke-linecap="round"/>
+          <path d="M66 106 C48 108 36 116 32 126" fill="none" stroke="#E5739B" stroke-width="9" stroke-linecap="round"/>
+          <circle cx="30" cy="53" r="4" fill="#FBC6D8"/><circle cx="24" cy="90" r="4" fill="#FBC6D8"/><circle cx="36" cy="120" r="4" fill="#FBC6D8"/>
+        </g>
+        <g id="axo-gills-right" class="axo-gills axo-gills-right">
+          <path d="M194 70 C216 52 230 50 238 56" fill="none" stroke="#E5739B" stroke-width="9" stroke-linecap="round"/>
+          <path d="M198 88 C220 82 234 86 242 94" fill="none" stroke="#E5739B" stroke-width="9" stroke-linecap="round"/>
+          <path d="M194 106 C212 108 224 116 228 126" fill="none" stroke="#E5739B" stroke-width="9" stroke-linecap="round"/>
+          <circle cx="230" cy="53" r="4" fill="#FBC6D8"/><circle cx="236" cy="90" r="4" fill="#FBC6D8"/><circle cx="224" cy="120" r="4" fill="#FBC6D8"/>
+        </g>
+        <!-- HEAD -->
+        <path id="axo-head" d="M130 40 C186 40 206 70 204 100 C202 132 172 146 130 146 C88 146 58 132 56 100 C54 70 74 40 130 40 Z"
+              fill="#F6A6C1" stroke="#153849" stroke-width="3.5" stroke-linejoin="round"/>
+        <!-- CHEEKS -->
+        <ellipse cx="86" cy="112" rx="12" ry="7" fill="#E5739B" opacity=".6"/>
+        <ellipse cx="174" cy="112" rx="12" ry="7" fill="#E5739B" opacity=".6"/>
+        <!-- EYES: they blink -->
+        <g id="axo-eyes" class="axo-eyes">
+          <circle cx="100" cy="92" r="10" fill="#153849"/>
+          <circle cx="160" cy="92" r="10" fill="#153849"/>
+          <circle cx="104" cy="88" r="3.5" fill="#fff"/>
+          <circle cx="164" cy="88" r="3.5" fill="#fff"/>
+        </g>
+        <!-- MOUTH: normal smile, plus a big smile for correct quiz answers -->
+        <g id="axo-mouth">
+          <path class="mouth-normal" d="M112 116 Q130 130 148 116" fill="none" stroke="#153849" stroke-width="3.5" stroke-linecap="round"/>
+          <path class="mouth-big" d="M108 112 Q130 142 152 112 Z" fill="#C8507A" stroke="#153849" stroke-width="3.5" stroke-linejoin="round"/>
+        </g>
+      </g>
+    </svg>
+
+    <div class="bubbles" aria-hidden="true">
+      <svg class="b b1"><use href="#bubble"/></svg>
+      <svg class="b b2"><use href="#bubble"/></svg>
+      <svg class="b b3"><use href="#bubble"/></svg>
+      <svg class="b b4"><use href="#bubble"/></svg>
+    </div>
+  </div>
+
+  <div class="hero-text">
+    <h1 id="hero-title" data-i18n="hero.title"></h1>
+    <p class="hero-intro" data-i18n="hero.intro"></p>
+
+    <nav class="hero-nav" data-i18n-aria="hero.navLabel">
+      <a class="btn btn-yellow" href="#meet"><span aria-hidden="true">🦎</span> <span data-i18n="hero.navMeet"></span></a>
+      <a class="btn btn-aqua" href="#clean"><span aria-hidden="true">💧</span> <span data-i18n="hero.navClean"></span></a>
+      <a class="btn btn-aqua" href="#raingarden"><span aria-hidden="true">🌱</span> <span data-i18n="hero.navGarden"></span></a>
+    </nav>
+
+    <!-- THE TACO BUTTON: just for fun, not science -->
+    <div class="taco-wrap">
+      <button type="button" class="taco-btn" id="tacoBtn" data-i18n-aria="taco.aria">
+        <svg class="taco-btn-art" viewBox="0 0 120 72" aria-hidden="true" focusable="false"><use href="#taco"/></svg>
+        <span class="taco-btn-text" data-i18n="taco.label"></span>
+      </button>
+      <p class="taco-note" data-i18n="taco.note"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1. MEET THE AXOLOTL ============ -->
+<section id="meet" class="section" aria-labelledby="meet-title">
+  <div class="wrap">
+    <h2 id="meet-title" data-i18n="meet.title"></h2>
+    <p class="lead" data-i18n="meet.lead"></p>
+
+    <ul class="facts">
+      <li><span class="icon" aria-hidden="true">🫧</span><div><h3 data-i18n="meet.f1t"></h3><p data-i18n="meet.f1"></p></div></li>
+      <li><span class="icon" aria-hidden="true">📍</span><div><h3 data-i18n="meet.f2t"></h3><p data-i18n="meet.f2"></p></div></li>
+      <li class="alert"><span class="icon" aria-hidden="true">🚨</span><div><h3 data-i18n="meet.f3t"></h3><p data-i18n="meet.f3"></p></div></li>
+      <li><span class="icon" aria-hidden="true">🏙️</span><div><h3 data-i18n="meet.f4t"></h3><p data-i18n="meet.f4"></p></div></li>
+      <li><span class="icon" aria-hidden="true">🐠</span><div><h3 data-i18n="meet.f5t"></h3><p data-i18n="meet.f5"></p></div></li>
+      <li class="good"><span class="icon" aria-hidden="true">💪</span><div><h3 data-i18n="meet.f6t"></h3><p data-i18n="meet.f6"></p></div></li>
+    </ul>
+
+    <div class="words">
+      <details><summary data-i18n="words.amphibianQ"></summary><p data-i18n="words.amphibianDef"></p></details>
+      <details><summary data-i18n="words.habitatQ"></summary><p data-i18n="words.habitatDef"></p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. KEEP WATER CLEAN ============ -->
+<section id="clean" class="section alt" aria-labelledby="clean-title">
+  <div class="wrap">
+    <h2 id="clean-title" data-i18n="clean.title"></h2>
+    <p class="lead" data-i18n="clean.lead"></p>
+    <p class="callout"><span aria-hidden="true">⚠️</span> <span data-i18n="clean.callout"></span></p>
+
+    <div class="words">
+      <details><summary data-i18n="words.runoffQ"></summary><p data-i18n="words.runoffDef"></p></details>
+      <details><summary data-i18n="words.pollutantQ"></summary><p data-i18n="words.pollutantDef"></p></details>
+      <details><summary data-i18n="words.dissolvedQ"></summary><p data-i18n="words.dissolvedDef"></p></details>
+    </div>
+
+    <!-- FILTER DEMO: simplified illustration -->
+    <figure class="card demo" aria-labelledby="filter-title">
+      <div class="demo-head">
+        <h3 id="filter-title" data-i18n="filter.title"></h3>
+        <p class="tag" data-i18n="filter.tag"></p>
+      </div>
+      <div class="demo-body">
+        <svg class="filter-art" id="filterArt" viewBox="0 0 320 360" role="img" aria-labelledby="filterSvgTitle filterSvgDesc">
+          <title id="filterSvgTitle" data-i18n="filter.svgTitle"></title>
+          <desc id="filterSvgDesc" data-i18n="filter.svgDesc"></desc>
+          <!-- top cup of muddy water -->
+          <g class="cup-top">
+            <path d="M100 20 H220 L210 90 H110 Z" fill="#fff" stroke="#153849" stroke-width="3" stroke-linejoin="round"/>
+            <path class="muddy" d="M104 40 H216 L210 88 H110 Z" fill="#B58B5A" opacity=".75"/>
+            <!-- dissolved stuff in the dirty water: shown with the "show hidden" button -->
+            <g class="dissolved dissolved-top" stroke="#fff" stroke-width="1.2">
+              <circle cx="122" cy="52" r="3.5" fill="#C2185B"/><circle cx="140" cy="80" r="3.5" fill="#6A1B9A"/>
+              <circle cx="176" cy="48" r="3.5" fill="#C2185B"/><circle cx="198" cy="58" r="3.5" fill="#6A1B9A"/>
+              <circle cx="186" cy="80" r="3.5" fill="#C2185B"/><circle cx="160" cy="64" r="3.5" fill="#6A1B9A"/>
+              <circle cx="118" cy="72" r="3.5" fill="#C2185B"/>
+            </g>
+          </g>
+          <!-- the filter -->
+          <g class="filter-box">
+            <path d="M90 130 H230 L200 210 H120 Z" fill="#EAF9FA" stroke="#153849" stroke-width="3" stroke-linejoin="round"/>
+            <path d="M98 150 H222 M106 172 H214 M112 192 H208" stroke="#086B88" stroke-width="2" stroke-dasharray="6 6"/>
+            <text x="160" y="124" text-anchor="middle" class="svg-label" data-i18n="filter.lblFilter"></text>
+          </g>
+          <!-- big bits that fall into the filter and get stuck -->
+          <g class="big-bits">
+            <use href="#leaf" x="128" y="46" width="22" height="22" class="bit bit1"/>
+            <rect x="166" y="56" width="10" height="10" rx="3" fill="#6B4A2B" stroke="#153849" class="bit bit2"/>
+            <circle cx="190" cy="66" r="6" fill="#6B4A2B" stroke="#153849" class="bit bit3"/>
+            <rect x="150" y="70" width="12" height="6" rx="3" fill="#8E9AA6" class="bit bit4"/>
+          </g>
+          <!-- bottom cup of clearer water -->
+          <g class="cup-bottom">
+            <path d="M110 250 H210 L202 340 H118 Z" fill="#fff" stroke="#153849" stroke-width="3" stroke-linejoin="round"/>
+            <path class="clear-water" d="M113 270 H207 L202 338 H118 Z" fill="#9EE3EA" opacity=".8"/>
+            <!-- dissolved stuff: tiny dots shown only with the "show hidden" button -->
+            <g class="dissolved dissolved-bottom">
+              <circle cx="132" cy="290" r="3.5" fill="#C2185B"/><circle cx="150" cy="310" r="3.5" fill="#6A1B9A"/>
+              <circle cx="172" cy="286" r="3.5" fill="#C2185B"/><circle cx="188" cy="318" r="3.5" fill="#6A1B9A"/>
+              <circle cx="160" cy="328" r="3.5" fill="#C2185B"/><circle cx="140" cy="322" r="3.5" fill="#6A1B9A"/>
+              <circle cx="196" cy="296" r="3.5" fill="#C2185B"/>
+            </g>
+          </g>
+          <g class="drips">
+            <path d="M160 218 C156 226 156 232 160 234 C164 232 164 226 160 218 Z" fill="#24B8C7"/>
+            <path d="M150 232 C146 240 146 246 150 248 C154 246 154 240 150 232 Z" fill="#24B8C7"/>
+          </g>
+        </svg>
+        <figcaption>
+          <div class="btn-col">
+            <button type="button" class="btn btn-yellow" id="pourBtn" data-i18n="filter.pour"></button>
+            <button type="button" class="btn btn-aqua" id="revealBtn" aria-pressed="false" data-i18n="filter.reveal"></button>
+            <button type="button" class="btn btn-plain" id="filterReset" data-i18n="filter.reset"></button>
+          </div>
+          <p class="demo-status" id="filterStatus" aria-live="polite" data-i18n="filter.status0"></p>
+        </figcaption>
+      </div>
+    </figure>
+
+    <!-- CHECKLIST -->
+    <h3 class="subhead" data-i18n="check.title"></h3>
+    <ul class="checklist">
+      <li><span class="icon" aria-hidden="true">🗑️</span><div><strong data-i18n="check.t1"></strong> <span data-i18n="check.d1"></span></div></li>
+      <li><span class="icon" aria-hidden="true">🌧️</span><div><strong data-i18n="check.t2"></strong> <span data-i18n="check.d2"></span></div></li>
+      <li><span class="icon" aria-hidden="true">🛢️</span><div><strong data-i18n="check.t3"></strong> <span data-i18n="check.d3"></span></div></li>
+      <li><span class="icon" aria-hidden="true">🐕</span><div><strong data-i18n="check.t4"></strong> <span data-i18n="check.d4"></span></div></li>
+      <li><span class="icon" aria-hidden="true">🔎</span><div><strong data-i18n="check.t5"></strong> <span data-i18n="check.d5"></span></div></li>
+    </ul>
+    <p class="safety"><span aria-hidden="true">🧤</span> <span data-i18n="check.safety"></span></p>
+  </div>
+</section>
+
+<!-- ============ 3. WHAT IS A RAIN GARDEN? ============ -->
+<section id="raingarden" class="section" aria-labelledby="rg-title">
+  <div class="wrap">
+    <h2 id="rg-title" data-i18n="rg.title"></h2>
+    <p class="lead" data-i18n="rg.lead"></p>
+
+    <figure class="card diagram-card">
+      <svg class="rg-art" id="rgArt" viewBox="0 0 640 360" role="img" aria-labelledby="rgSvgTitle rgSvgDesc">
+        <title id="rgSvgTitle" data-i18n="rg.svgTitle"></title>
+        <desc id="rgSvgDesc" data-i18n="rg.svgDesc"></desc>
+        <rect width="640" height="230" fill="#EAF9FA"/>
+        <g stroke="#24B8C7" stroke-width="4" stroke-linecap="round">
+          <path d="M60 20 l-6 16"/><path d="M110 10 l-6 16"/><path d="M160 24 l-6 16"/><path d="M210 12 l-6 16"/>
+        </g>
+        <!-- house -->
+        <path d="M40 110 L140 50 L240 110 Z" fill="#F6A6C1" stroke="#153849" stroke-width="3.5" stroke-linejoin="round"/>
+        <rect x="60" y="110" width="160" height="120" fill="#FFFBEF" stroke="#153849" stroke-width="3.5"/>
+        <rect x="90" y="140" width="34" height="34" rx="4" fill="#9EE3EA" stroke="#153849" stroke-width="3"/>
+        <rect x="150" y="170" width="36" height="60" rx="4" fill="#086B88" stroke="#153849" stroke-width="3"/>
+        <!-- gutter + downspout -->
+        <path d="M232 108 H254 V214 C254 222 260 226 270 226" fill="none" stroke="#5B6B78" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- ground -->
+        <path d="M0 230 H360 C390 230 400 262 450 262 C500 262 510 230 540 230 H640 V360 H0 Z" fill="#B88A5A"/>
+        <path d="M0 230 H360 C390 230 400 262 450 262 C500 262 510 230 540 230 H640" fill="none" stroke="#5DBB63" stroke-width="8"/>
+        <path d="M380 246 C400 270 500 270 520 246 L520 320 H380 Z" fill="#8B6440"/>
+        <!-- plants -->
+        <g stroke="#153849" stroke-width="2.5">
+          <path d="M410 256 C404 230 412 214 420 206 C424 224 420 242 416 256" fill="#5DBB63"/>
+          <path d="M440 260 C432 226 444 200 452 190 C460 214 452 240 448 260" fill="#7BC67E"/>
+          <path d="M476 260 C470 232 478 216 488 206 C492 226 486 244 482 260" fill="#5DBB63"/>
+          <circle cx="452" cy="188" r="8" fill="#FFD65A"/>
+          <circle cx="420" cy="204" r="6" fill="#F6A6C1"/>
+        </g>
+        <path d="M412 262 v40 M446 264 v46 M480 262 v38" stroke="#E8D3B0" stroke-width="3" stroke-linecap="round"/>
+        <g stroke="#24B8C7" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M430 292 v26 m-8 -8 l8 8 l8 -8"/><path d="M470 292 v26 m-8 -8 l8 8 l8 -8"/>
+        </g>
+        <!-- path the water drop follows (invisible) -->
+        <path id="rgFlowPath" d="M150 60 L232 106 L254 110 L254 214 C254 222 262 228 290 230 L360 232 C384 234 396 254 430 258 L450 300" fill="none" stroke="none"/>
+        <g id="rgDrop" opacity="0">
+          <path d="M0 -14 C-8 -2 -9 4 -9 6 A9 9 0 0 0 9 6 C9 4 8 -2 0 -14 Z" fill="#24B8C7" stroke="#153849" stroke-width="2.5"/>
+          <circle cx="-3" cy="4" r="2" fill="#fff"/>
+        </g>
+        <g font-weight="800" font-size="18" text-anchor="middle">
+          <g class="mk" data-step="1"><circle cx="190" cy="66" r="16"/><text x="190" y="72">1</text></g>
+          <g class="mk" data-step="2"><circle cx="282" cy="150" r="16"/><text x="282" y="156">2</text></g>
+          <g class="mk" data-step="3"><circle cx="330" cy="206" r="16"/><text x="330" y="212">3</text></g>
+          <g class="mk" data-step="4"><circle cx="520" cy="196" r="16"/><text x="520" y="202">4</text></g>
+          <g class="mk" data-step="5"><circle cx="520" cy="300" r="16"/><text x="520" y="306">5</text></g>
+        </g>
+        <text x="140" y="40" text-anchor="middle" class="svg-label" data-i18n="rg.lblRoof"></text>
+        <text x="304" y="120" class="svg-label" data-i18n="rg.lblDownspout"></text>
+        <text x="450" y="172" text-anchor="middle" class="svg-label" data-i18n="rg.lblGarden"></text>
+        <text x="300" y="344" class="svg-label" data-i18n="rg.lblSoil"></text>
+      </svg>
+      <figcaption>
+        <div class="btn-row">
+          <button type="button" class="btn btn-yellow" id="followBtn"><span aria-hidden="true">💧</span> <span data-i18n="rg.follow"></span></button>
+          <p class="tag" data-i18n="rg.tag"></p>
+        </div>
+        <ol class="flow-steps" id="flowSteps">
+          <li data-step="1" data-i18n="rg.step1"></li>
+          <li data-step="2" data-i18n="rg.step2"></li>
+          <li data-step="3" data-i18n="rg.step3"></li>
+          <li data-step="4" data-i18n="rg.step4"></li>
+          <li data-step="5" data-i18n="rg.step5"></li>
+        </ol>
+      </figcaption>
+    </figure>
+
+    <ul class="facts three">
+      <li class="good"><span class="icon" aria-hidden="true">✅</span><div><h3 data-i18n="rg.c1t"></h3><p data-i18n="rg.c1"></p></div></li>
+      <li><span class="icon" aria-hidden="true">📍</span><div><h3 data-i18n="rg.c2t"></h3><p data-i18n="rg.c2"></p></div></li>
+      <li class="alert"><span class="icon" aria-hidden="true">🚫</span><div><h3 data-i18n="rg.c3t"></h3><p data-i18n="rg.c3"></p></div></li>
+    </ul>
+    <div class="words">
+      <details><summary data-i18n="words.nativeQ"></summary><p data-i18n="words.nativeDef"></p></details>
+    </div>
+    <p class="note" data-i18n="rg.note"></p>
+  </div>
+</section>
+
+<!-- ============ 4. OUR IDEA TO TEST ============ -->
+<section id="idea" class="section alt" aria-labelledby="idea-title">
+  <div class="wrap">
+    <p class="badge" data-i18n="idea.badge"></p>
+    <h2 id="idea-title" data-i18n="idea.title"></h2>
+    <p class="lead" data-i18n="idea.lead"></p>
+
+    <figure class="card diagram-card">
+      <!--
+        OUR CONCEPT SKETCH (not to scale)
+        Layers inside the box, top to bottom: plants, big rocks, smaller rocks, small rocks, sand,
+        then a pipe with holes running along the whole bottom.
+      -->
+      <svg class="idea-art" id="ideaArt" viewBox="0 0 640 420" role="img" aria-labelledby="ideaSvgTitle ideaSvgDesc">
+        <title id="ideaSvgTitle" data-i18n="idea.svgTitle"></title>
+        <desc id="ideaSvgDesc" data-i18n="idea.svgDesc"></desc>
+        <rect width="640" height="420" fill="#EAF9FA"/>
+        <!-- school wall -->
+        <rect x="0" y="44" width="110" height="376" fill="#FFFBEF" stroke="#153849" stroke-width="3"/>
+        <path d="M0 80 H110 M0 120 H110 M0 160 H110 M0 200 H110 M0 240 H110 M0 280 H110 M0 320 H110 M0 360 H110" stroke="#EFE3C8" stroke-width="3"/>
+        <path d="M0 44 H130" stroke="#153849" stroke-width="6" stroke-linecap="round"/>
+        <!-- ground -->
+        <rect x="0" y="392" width="640" height="28" fill="#5DBB63"/>
+
+        <!-- PART 1: gutter -->
+        <g class="part" data-part="gutter">
+          <path d="M110 58 H162 V118 C162 132 172 138 188 138 H220" fill="none" stroke="#5B6B78" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+
+        <!-- PART 4: wood frame (behind the inside layers) -->
+        <g class="part" data-part="frame">
+          <rect x="190" y="140" width="340" height="236" rx="6" fill="#C48A55" stroke="#153849" stroke-width="3.5"/>
+          <path d="M196 190 H204 M196 250 H204 M196 310 H204 M516 190 H524 M516 250 H524 M516 310 H524" stroke="#8A5A33" stroke-width="3" stroke-linecap="round"/>
+          <rect x="180" y="374" width="360" height="20" rx="4" fill="#A8703F" stroke="#153849" stroke-width="3"/>
+        </g>
+
+        <!-- PART 3: rocks and sand, biggest on top, getting smaller down to sand -->
+        <g class="part" data-part="rocks">
+          <rect x="204" y="150" width="312" height="214" fill="#DCE3E7"/>
+          <!-- big rocks -->
+          <g fill="#9AA5AE" stroke="#153849" stroke-width="2.5">
+            <ellipse cx="232" cy="178" rx="26" ry="18"/><ellipse cx="290" cy="182" rx="28" ry="19"/><ellipse cx="350" cy="176" rx="26" ry="18"/>
+            <ellipse cx="410" cy="182" rx="28" ry="19"/><ellipse cx="470" cy="178" rx="26" ry="18"/><ellipse cx="502" cy="190" rx="14" ry="12"/>
+          </g>
+          <!-- smaller rocks -->
+          <g fill="#AEB9C1" stroke="#153849" stroke-width="2">
+            <ellipse cx="222" cy="220" rx="14" ry="10"/><ellipse cx="256" cy="224" rx="15" ry="10"/><ellipse cx="292" cy="218" rx="14" ry="10"/>
+            <ellipse cx="328" cy="224" rx="15" ry="10"/><ellipse cx="364" cy="218" rx="14" ry="10"/><ellipse cx="400" cy="224" rx="15" ry="10"/>
+            <ellipse cx="436" cy="218" rx="14" ry="10"/><ellipse cx="472" cy="224" rx="15" ry="10"/><ellipse cx="502" cy="218" rx="11" ry="9"/>
+          </g>
+          <!-- small rocks -->
+          <g fill="#C3CCD2" stroke="#153849" stroke-width="1.5">
+            <circle cx="214" cy="252" r="6"/><circle cx="232" cy="256" r="6"/><circle cx="250" cy="250" r="6"/><circle cx="268" cy="256" r="6"/><circle cx="286" cy="250" r="6"/>
+            <circle cx="304" cy="256" r="6"/><circle cx="322" cy="250" r="6"/><circle cx="340" cy="256" r="6"/><circle cx="358" cy="250" r="6"/><circle cx="376" cy="256" r="6"/>
+            <circle cx="394" cy="250" r="6"/><circle cx="412" cy="256" r="6"/><circle cx="430" cy="250" r="6"/><circle cx="448" cy="256" r="6"/><circle cx="466" cy="250" r="6"/>
+            <circle cx="484" cy="256" r="6"/><circle cx="502" cy="250" r="6"/>
+          </g>
+          <!-- sand -->
+          <rect x="204" y="266" width="312" height="74" fill="#EBD9A8"/>
+          <g fill="#C9A86A"><circle cx="230" cy="290" r="2"/><circle cx="280" cy="310" r="2"/><circle cx="330" cy="286" r="2"/><circle cx="380" cy="318" r="2"/><circle cx="430" cy="294" r="2"/><circle cx="480" cy="314" r="2"/><circle cx="256" cy="326" r="2"/><circle cx="456" cy="330" r="2"/></g>
+          <!-- layer labels -->
+          <text x="520" y="182" text-anchor="end" class="svg-label-in" data-i18n="idea.lblBig" dx="-4"></text>
+          <text x="512" y="240" text-anchor="end" class="svg-label-in" data-i18n="idea.lblSmall"></text>
+          <text x="360" y="306" text-anchor="middle" class="svg-label-in" data-i18n="idea.lblSand"></text>
+        </g>
+
+        <!-- PART 2: plants growing out of the top -->
+        <g class="part" data-part="plants">
+          <g stroke="#153849" stroke-width="2.5" stroke-linejoin="round">
+            <path d="M250 166 C240 128 252 104 262 94 C270 120 264 146 258 166" fill="#5DBB63"/>
+            <path d="M318 166 C306 120 320 88 330 76 C342 108 330 142 326 166" fill="#7BC67E"/>
+            <path d="M388 166 C378 130 390 108 400 98 C406 124 400 148 396 166" fill="#5DBB63"/>
+            <path d="M456 166 C444 124 458 96 468 86 C478 116 468 146 464 166" fill="#7BC67E"/>
+            <circle cx="330" cy="74" r="9" fill="#FFD65A"/>
+            <circle cx="468" cy="84" r="8" fill="#F6A6C1"/>
+          </g>
+        </g>
+
+        <!-- PART 5: pipe with holes along the whole bottom, out the side -->
+        <g class="part" data-part="outlet">
+          <rect x="204" y="344" width="390" height="20" rx="10" fill="#5B6B78" stroke="#153849" stroke-width="2.5"/>
+          <g fill="#153849">
+            <circle cx="226" cy="354" r="3.5"/><circle cx="256" cy="354" r="3.5"/><circle cx="286" cy="354" r="3.5"/><circle cx="316" cy="354" r="3.5"/>
+            <circle cx="346" cy="354" r="3.5"/><circle cx="376" cy="354" r="3.5"/><circle cx="406" cy="354" r="3.5"/><circle cx="436" cy="354" r="3.5"/>
+            <circle cx="466" cy="354" r="3.5"/><circle cx="496" cy="354" r="3.5"/>
+          </g>
+          <path d="M610 348 C604 358 604 364 610 366 C616 364 616 358 610 348 Z" fill="#24B8C7" stroke="#153849" stroke-width="2"/>
+          <path d="M624 360 C618 370 618 376 624 378 C630 376 630 370 624 360 Z" fill="#24B8C7" stroke="#153849" stroke-width="2"/>
+        </g>
+
+        <!-- numbered markers that match the buttons -->
+        <g font-weight="800" font-size="18" text-anchor="middle">
+          <g class="mk" data-part="gutter"><circle cx="162" cy="24" r="17"/><text x="162" y="30">1</text></g>
+          <g class="mk" data-part="plants"><circle cx="400" cy="62" r="17"/><text x="400" y="68">2</text></g>
+          <g class="mk" data-part="rocks"><circle cx="575" cy="230" r="17"/><text x="575" y="236">3</text></g>
+          <g class="mk" data-part="frame"><circle cx="160" cy="300" r="17"/><text x="160" y="306">4</text></g>
+          <g class="mk" data-part="outlet"><circle cx="575" cy="320" r="17"/><text x="575" y="326">5</text></g>
+        </g>
+      </svg>
+      <figcaption>
+        <p class="tag strong" data-i18n="idea.caption"></p>
+        <p class="tap-hint" data-i18n="idea.tapHint"></p>
+        <div class="part-buttons" role="group" data-i18n-aria="idea.partsGroup">
+          <button type="button" class="part-btn" data-part="gutter" aria-pressed="false" aria-controls="partInfo"><span class="num" aria-hidden="true">1</span> <span data-i18n="idea.p1"></span></button>
+          <button type="button" class="part-btn" data-part="plants" aria-pressed="false" aria-controls="partInfo"><span class="num" aria-hidden="true">2</span> <span data-i18n="idea.p2"></span></button>
+          <button type="button" class="part-btn" data-part="rocks"  aria-pressed="false" aria-controls="partInfo"><span class="num" aria-hidden="true">3</span> <span data-i18n="idea.p3"></span></button>
+          <button type="button" class="part-btn" data-part="frame"  aria-pressed="false" aria-controls="partInfo"><span class="num" aria-hidden="true">4</span> <span data-i18n="idea.p4"></span></button>
+          <button type="button" class="part-btn" data-part="outlet" aria-pressed="false" aria-controls="partInfo"><span class="num" aria-hidden="true">5</span> <span data-i18n="idea.p5"></span></button>
+        </div>
+        <div class="part-info" id="partInfo" aria-live="polite"><p data-i18n="idea.pickOne"></p></div>
+      </figcaption>
+    </figure>
+
+    <ul class="know">
+      <li><span aria-hidden="true">🧪</span> <span data-i18n="idea.know1"></span></li>
+      <li><span aria-hidden="true">👷</span> <span data-i18n="idea.know2"></span></li>
+      <li><span aria-hidden="true">🏫</span> <span data-i18n="idea.know3"></span></li>
+    </ul>
+
+    <h3 class="subhead" data-i18n="idea.examplesTitle"></h3>
+    <div class="examples">
+      <!-- Example 1: Rain Garden in a Box (our own drawing; their plans belong to them) -->
+      <article class="card example">
+        <svg class="example-art" viewBox="0 0 200 120" aria-hidden="true" focusable="false">
+          <rect width="200" height="120" rx="12" fill="#EAF9FA"/>
+          <path d="M30 20 H60 V50" stroke="#5B6B78" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="50" y="52" width="110" height="52" rx="4" fill="#C48A55" stroke="#153849" stroke-width="3"/>
+          <rect x="58" y="58" width="94" height="40" fill="#EBD9A8"/>
+          <path d="M74 58 C70 42 76 34 82 30 C84 40 82 50 80 58 M110 58 C104 38 112 28 118 24 C122 38 116 50 114 58" fill="#5DBB63" stroke="#153849" stroke-width="2"/>
+          <path d="M160 94 H182" stroke="#5B6B78" stroke-width="7" stroke-linecap="round"/>
+        </svg>
+        <h4 data-i18n="idea.ex1Title"></h4>
+        <p data-i18n="idea.ex1Text"></p>
+        <p><a href="https://re-store.org/rain-garden-in-a-box/" rel="noopener" data-i18n="idea.ex1Link"></a></p>
+      </article>
+
+      <!-- Example 2: Santa Fe rain garden. Our own stylized drawing, based on a photo from NPR. -->
+      <article class="card example">
+        <svg class="example-art" viewBox="0 0 400 240" role="img" data-i18n-aria="idea.ex2Alt">
+          <rect width="400" height="240" rx="14" fill="#EAF9FA"/>
+          <!-- trees in the back -->
+          <g stroke="#153849" stroke-width="2.5">
+            <rect x="86" y="70" width="10" height="70" fill="#8A5A33"/><circle cx="91" cy="62" r="34" fill="#7BC67E"/>
+            <rect x="300" y="60" width="10" height="80" fill="#8A5A33"/><circle cx="305" cy="52" r="38" fill="#5DBB63"/>
+            <rect x="346" y="84" width="8" height="56" fill="#8A5A33"/><circle cx="350" cy="78" r="24" fill="#7BC67E"/>
+          </g>
+          <!-- street with a car -->
+          <rect x="0" y="180" width="400" height="60" fill="#8E9AA6"/>
+          <path d="M0 212 H400" stroke="#FFD65A" stroke-width="4" stroke-dasharray="18 14"/>
+          <g stroke="#153849" stroke-width="2.5">
+            <path d="M14 196 H70 L62 182 H28 Z" fill="#E8574F"/>
+            <rect x="8" y="194" width="70" height="14" rx="5" fill="#E8574F"/>
+            <circle cx="24" cy="208" r="6" fill="#153849"/><circle cx="62" cy="208" r="6" fill="#153849"/>
+          </g>
+          <!-- curb and the garden dip -->
+          <path d="M0 180 H120 C150 180 160 200 210 200 C260 200 270 180 300 180 H400 V176 H0 Z" fill="#5B6B78"/>
+          <path d="M118 176 C150 176 160 196 210 196 C260 196 270 176 302 176 L300 140 H120 Z" fill="#B88A5A" stroke="#153849" stroke-width="2"/>
+          <path d="M120 140 H300" stroke="#5DBB63" stroke-width="6"/>
+          <!-- runoff flowing in from the street -->
+          <path d="M84 186 C110 180 130 182 150 176" stroke="#24B8C7" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="10 8"/>
+          <path d="M146 170 l10 6 l-10 6" stroke="#24B8C7" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- rocks and plants in the garden -->
+          <g stroke="#153849" stroke-width="2">
+            <ellipse cx="170" cy="168" rx="12" ry="8" fill="#9AA5AE"/><ellipse cx="248" cy="170" rx="14" ry="9" fill="#9AA5AE"/>
+            <path d="M190 160 C184 136 192 122 198 116 C202 132 198 150 196 160" fill="#5DBB63"/>
+            <path d="M216 160 C208 130 218 112 226 104 C232 126 226 148 222 160" fill="#7BC67E"/>
+            <path d="M270 160 C264 140 270 128 276 122 C280 136 278 150 276 160" fill="#5DBB63"/>
+            <circle cx="226" cy="102" r="6" fill="#FFD65A"/>
+          </g>
+          <!-- the information sign -->
+          <g stroke="#153849" stroke-width="2.5">
+            <rect x="322" y="150" width="6" height="34" fill="#8A5A33"/><rect x="372" y="150" width="6" height="34" fill="#8A5A33"/>
+            <rect x="310" y="104" width="80" height="52" rx="4" fill="#FFFFFF"/>
+            <rect x="310" y="104" width="80" height="14" rx="4" fill="#086B88"/>
+          </g>
+          <text x="350" y="115" text-anchor="middle" class="sign-text" data-i18n="idea.ex2Sign"></text>
+          <g stroke-linecap="round">
+            <path d="M318 134 H334" stroke="#8E9AA6" stroke-width="4"/>
+            <path d="M338 134 l6 -4 v8 z" fill="#086B88"/>
+            <path d="M350 140 C356 128 366 128 372 140" stroke="#5DBB63" stroke-width="4" fill="none"/>
+            <path d="M376 130 v10" stroke="#086B88" stroke-width="3"/>
+            <path d="M318 148 H380" stroke="#5B6B78" stroke-width="2"/>
+          </g>
+        </svg>
+        <h4 data-i18n="idea.ex2Title"></h4>
+        <p data-i18n="idea.ex2Text"></p>
+        <p><a href="https://npr.brightspotcdn.com/dims4/default/725b3f7/2147483647/strip/true/crop/4032x3024+0+0/resize/1760x1320!/format/webp/quality/90/?url=http%3A%2F%2Fnpr-brightspot.s3.amazonaws.com%2F09%2Ff2%2F27c97c1d47aa9871d8476a65a83a%2Funnamed.jpg" rel="noopener" data-i18n="idea.ex2Link"></a></p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. BUILD THE RAIN GARDEN IN A BOX WITH AN ADULT ============ -->
+<section id="plan" class="section" aria-labelledby="plan-title">
+  <div class="wrap">
+    <p class="badge" data-i18n="idea.badge"></p>
+    <h2 id="plan-title" data-i18n="plan.title"></h2>
+    <p class="lead" data-i18n="plan.lead"></p>
+    <ol class="plan-steps">
+      <li><h3 data-i18n="plan.s1t"></h3><p data-i18n="plan.s1d"></p></li>
+      <li><h3 data-i18n="plan.s2t"></h3><p data-i18n="plan.s2d"></p></li>
+      <li><h3 data-i18n="plan.s3t"></h3><p data-i18n="plan.s3d"></p></li>
+      <li><h3 data-i18n="plan.s4t"></h3><p data-i18n="plan.s4d"></p></li>
+      <li><h3 data-i18n="plan.s5t"></h3><p data-i18n="plan.s5d"></p></li>
+      <li><h3 data-i18n="plan.s6t"></h3><p data-i18n="plan.s6d"></p></li>
+    </ol>
+    <div class="compare">
+      <div class="card"><h3><span aria-hidden="true">🧒</span> <span data-i18n="plan.kidsT"></span></h3><p data-i18n="plan.kids"></p></div>
+      <div class="card card-yellow"><h3><span aria-hidden="true">🧑‍🔧</span> <span data-i18n="plan.adultsT"></span></h3><p data-i18n="plan.adults"></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. QUIZ ============ -->
+<section id="quiz" class="section alt" aria-labelledby="quiz-title">
+  <div class="wrap">
+    <div class="quiz-head">
+      <!-- small axolotl face that smiles when you get one right -->
+      <svg class="quiz-axo" id="quizAxo" viewBox="0 0 140 100" aria-hidden="true" focusable="false">
+        <g stroke-linecap="round" fill="none" stroke="#E5739B" stroke-width="7">
+          <path d="M28 40 C16 30 8 30 4 34"/><path d="M26 54 C14 52 6 56 2 62"/><path d="M112 40 C124 30 132 30 136 34"/><path d="M114 54 C126 52 134 56 138 62"/>
+        </g>
+        <path d="M70 18 C108 18 118 40 116 58 C114 80 96 90 70 90 C44 90 26 80 24 58 C22 40 32 18 70 18 Z" fill="#F6A6C1" stroke="#153849" stroke-width="3"/>
+        <circle cx="54" cy="50" r="6" fill="#153849"/><circle cx="86" cy="50" r="6" fill="#153849"/>
+        <circle cx="56" cy="47" r="2" fill="#fff"/><circle cx="88" cy="47" r="2" fill="#fff"/>
+        <path class="mouth-normal" d="M60 68 Q70 74 80 68" stroke="#153849" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path class="mouth-big" d="M56 64 Q70 84 84 64 Z" fill="#C8507A" stroke="#153849" stroke-width="3" stroke-linejoin="round"/>
+      </svg>
+      <div>
+        <h2 id="quiz-title" data-i18n="quiz.title"></h2>
+        <p data-i18n="quiz.lead"></p>
+      </div>
+    </div>
+    <!-- Questions are built by js/main.js from the words in js/i18n.js -->
+    <div id="quizList" class="quiz-list"></div>
+  </div>
+</section>
+
+<!-- ============ 7. ABOUT AND SOURCES ============ -->
+<section id="about" class="section" aria-labelledby="about-title">
+  <div class="wrap">
+    <h2 id="about-title" data-i18n="about.title"></h2>
+    <p data-i18n="about.text"></p>
+    <p class="callout"><span aria-hidden="true">📝</span> <span data-i18n="about.honest"></span></p>
+
+    <details class="sources-box">
+      <summary data-i18n="about.sources"></summary>
+      <ul class="sources">
+        <li><a href="https://www.iucnredlist.org/species/1095/53947343" rel="noopener">IUCN Red List: <i>Ambystoma mexicanum</i></a> <span data-i18n="src.iucn"></span></li>
+        <li><a href="https://amphibiaweb.org/species/3842" rel="noopener">AmphibiaWeb: <i>Ambystoma mexicanum</i></a> <span data-i18n="src.amphibiaweb"></span></li>
+        <li><a href="https://www.conservation.org/axolotl-facts" rel="noopener">Conservation International: Axolotl facts</a> <span data-i18n="src.ci"></span></li>
+        <li><a href="https://es.mongabay.com/2024/02/mexico-cientificos-productores-unen-fuerzas-para-conservar-xochimilco/" rel="noopener">Mongabay Latam (2024): Xochimilco</a> <span data-i18n="src.mongabay"></span></li>
+        <li><a href="https://www.usgs.gov/water-science-school/science/water-quality-information-topic" rel="noopener">USGS Water Science School: Water quality</a> <span data-i18n="src.usgsQuality"></span></li>
+        <li><a href="https://coloradosprings.gov/safety-education-outreach-0" rel="noopener">City of Colorado Springs: About our waterways</a> <span data-i18n="src.cos"></span></li>
+        <li><a href="https://www.epa.gov/soakuptherain/soak-rain-rain-gardens" rel="noopener">US EPA: Soak Up the Rain, rain gardens</a> <span data-i18n="src.epa"></span></li>
+        <li><a href="https://extension.psu.edu/how-to-make-a-rain-garden" rel="noopener">Penn State Extension: How to make a rain garden</a> <span data-i18n="src.psu"></span></li>
+        <li><a href="https://re-store.org/rain-garden-in-a-box/" rel="noopener">The RE Store: Rain Garden in a Box</a> <span data-i18n="src.restore"></span></li>
+      </ul>
+    </details>
+    <p class="credits" data-i18n="about.credits"></p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <p data-i18n="footer.text"></p>
+  <p><a href="#main" data-i18n="footer.top"></a></p>
+</footer>
+
+<!-- Falling tacos appear in here. It never catches taps or clicks. -->
+<div class="taco-layer" id="tacoLayer" aria-hidden="true"></div>
+<p class="sr-only" id="announcer" aria-live="polite"></p>
+
+<noscript><p class="noscript">This page needs JavaScript turned on to show its words. / Esta página necesita JavaScript para mostrar el texto.</p></noscript>
+
+<script src="js/i18n.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
