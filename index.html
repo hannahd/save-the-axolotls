@@ -157,7 +157,7 @@
     <p class="lead" data-i18n="meet.lead"></p>
 
     <ul class="facts">
-      <li><span class="icon" aria-hidden="true">🫧</span><div><h3 data-i18n="meet.f1t"></h3><p data-i18n="meet.f1"></p></div></li>
+      <li><span class="icon" aria-hidden="true">🦸</span><div><h3 data-i18n="meet.f1t"></h3><p data-i18n="meet.f1"></p></div></li>
       <li><span class="icon" aria-hidden="true">📍</span><div><h3 data-i18n="meet.f2t"></h3><p data-i18n="meet.f2"></p></div></li>
       <li class="alert"><span class="icon" aria-hidden="true">🚨</span><div><h3 data-i18n="meet.f3t"></h3><p data-i18n="meet.f3"></p></div></li>
       <li><span class="icon" aria-hidden="true">🏙️</span><div><h3 data-i18n="meet.f4t"></h3><p data-i18n="meet.f4"></p></div></li>
@@ -573,11 +573,16 @@
       </svg>
       <div>
         <h2 id="quiz-title" data-i18n="quiz.title"></h2>
-        <p data-i18n="quiz.lead"></p>
       </div>
     </div>
     <!-- Questions are built by js/main.js from the words in js/i18n.js -->
     <div id="quizList" class="quiz-list"></div>
+
+    <!-- Shows up once every answer is right -->
+    <div class="card card-yellow quiz-done" id="quizDone" hidden>
+      <p class="quiz-done-text"><span aria-hidden="true">🎉</span> <strong data-i18n="quiz.doneTitle"></strong> <span data-i18n="quiz.doneText"></span></p>
+      <button type="button" class="btn btn-yellow" id="celebrateBtn"><span aria-hidden="true">🎊</span> <span data-i18n="quiz.celebrate"></span></button>
+    </div>
   </div>
 </section>
 
@@ -615,6 +620,8 @@
 
 <!-- Falling tacos appear in here. It never catches taps or clicks. -->
 <div class="taco-layer" id="tacoLayer" aria-hidden="true"></div>
+<!-- Quiz confetti appears in here. It also never catches taps or clicks. -->
+<div class="taco-layer" id="confettiLayer" aria-hidden="true"></div>
 <p class="sr-only" id="announcer" aria-live="polite"></p>
 
 <noscript><p class="noscript">This page needs JavaScript turned on to show its words. / Esta página necesita JavaScript para mostrar el texto.</p></noscript>
