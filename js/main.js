@@ -8,9 +8,13 @@
   var lang = "en";
   var reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-  // Calm mode is on if the device asks for less motion (or ?calm is in the address, for testing)
-  function calm() {
+  // The device (or ?calm in the address, for testing) asks for less motion
+  function calmByDefault() {
     return reduceMotionQuery.matches || root.classList.contains("reduce-motion");
+  }
+  // Calm mode is on when the device asks for it, unless the visitor pressed "Play animations" (.motion-ok)
+  function calm() {
+    return calmByDefault() && !root.classList.contains("motion-ok");
   }
   if (/[?&]calm\b/.test(location.search)) root.classList.add("reduce-motion");
 
@@ -47,6 +51,20 @@
     showPart(currentPart);
     buildQuiz();
     remember("axo-lang", lang);
+
+    updateAddress();
+  }
+
+  // Keep the address bar matching the page, so copying the link shares what you see:
+  // ?lang=en or ?lang=es for the language, and calm=1 when animations are off.
+  function updateAddress() {
+    try {
+      var url = new URL(location.href);
+      url.searchParams.set("lang", lang);
+      if (calm()) url.searchParams.set("calm", "1");
+      else url.searchParams.delete("calm");
+      history.replaceState(null, "", url);
+    } catch (e) {}
   }
 
   document.querySelectorAll("[data-lang]").forEach(function (btn) {
@@ -56,15 +74,35 @@
   /* ---------- PAUSE ANIMATIONS ---------- */
   var pauseBtn = document.getElementById("pauseBtn");
   function updatePauseLabel() {
-    var paused = root.classList.contains("paused");
-    pauseBtn.setAttribute("aria-pressed", paused ? "true" : "false");
-    pauseBtn.querySelector(".pause-text").textContent = paused ? t("ui.play") : t("ui.pause");
+    var off = calm();
+    pauseBtn.setAttribute("aria-pressed", off ? "true" : "false");
+    pauseBtn.querySelector(".pause-text").textContent = off ? t("ui.play") : t("ui.pause");
   }
+  // One button for everything: "Pause animations" switches the page to the calm version,
+  // "Play animations" turns motion back on, even when the device's Reduce motion setting started the page calm.
+  // Pausing is remembered. Turning motion on for a Reduce-motion device only lasts until this browser tab
+  // closes, so the next visitor on a shared tablet (or the next visit) starts calm again.
   pauseBtn.addEventListener("click", function () {
-    root.classList.toggle("paused");
-    remember("axo-paused", root.classList.contains("paused") ? "1" : "0");
+    if (calm()) {
+      root.classList.remove("reduce-motion", "paused");
+      remember("axo-motion", "on");
+      if (reduceMotionQuery.matches) {
+        root.classList.add("motion-ok");
+        try { sessionStorage.setItem("axo-motion-ok", "1"); } catch (e) {}
+      }
+    } else {
+      root.classList.add("reduce-motion");
+      root.classList.remove("motion-ok");
+      remember("axo-motion", "off");
+      try { sessionStorage.removeItem("axo-motion-ok"); } catch (e) {}
+    }
     updatePauseLabel();
+    updateAddress();
   });
+  // If the device setting changes while the page is open, keep the button and address honest
+  if (reduceMotionQuery.addEventListener) {
+    reduceMotionQuery.addEventListener("change", function () { updatePauseLabel(); updateAddress(); });
+  }
 
   /* ---------- TACO BUTTON ---------- */
   var tacoLayer = document.getElementById("tacoLayer");
@@ -243,6 +281,76 @@
   var quizList = document.getElementById("quizList");
   var quizAxo = document.getElementById("quizAxo");
   var picks = {}; // which answer was picked for each question (only kept on this page)
+  var missed = {}; // questions where a wrong answer was ever picked
+  var wasAllRight = false;
+  var quizDone = document.getElementById("quizDone");
+  var confettiLayer = document.getElementById("confettiLayer");
+  var CONFETTI_COLORS = ["#24B8C7", "#FFD65A", "#F6A6C1", "#086B88", "#5DBB63", "#C8507A"];
+
+  function allRight() {
+    return window.QUIZ.every(function (item, qi) { return picks[qi] === item.right; });
+  }
+  // Perfect = every answer right AND no wrong answer was ever picked
+  function perfect() {
+    return allRight() && Object.keys(missed).length === 0;
+  }
+
+  /* CONFETTI: falls across the whole screen. A perfect score mixes tacos into it. */
+  function confetti(withTacos) {
+    confettiLayer.innerHTML = ""; // start fresh so pressing Celebrate a lot never piles up
+    announce(withTacos ? t("quiz.partyTacos") : t("quiz.party"));
+
+    if (calm()) {
+      // Calm version: a short row of confetti (and tacos) that fades in and out, nothing falls
+      var row = document.createElement("div");
+      row.className = "taco-party";
+      for (var i = 0; i < 3; i++) {
+        var pop = document.createElement("span");
+        pop.className = "party-pop";
+        pop.textContent = "🎉";
+        row.appendChild(pop);
+        if (withTacos) row.appendChild(makeTacoSvg());
+      }
+      confettiLayer.appendChild(row);
+      setTimeout(function () { row.remove(); }, 2100);
+      return;
+    }
+
+    function drop(el, minTime, extraTime) {
+      el.style.left = (Math.random() * 98) + "vw";
+      el.style.animationDuration = (minTime + Math.random() * extraTime) + "s";
+      el.style.animationDelay = (Math.random() * 1.2) + "s";
+      el.style.setProperty("--dx", (Math.random() * 120 - 60) + "px");
+      el.style.setProperty("--r0", (Math.random() * 60 - 30) + "deg");
+      el.style.setProperty("--r1", (Math.random() * 720 - 360) + "deg");
+      el.addEventListener("animationend", function () { el.remove(); });
+      setTimeout(function () { el.remove(); }, 7000); // backup clean-up
+      confettiLayer.appendChild(el);
+    }
+
+    for (var n = 0; n < 80; n++) {
+      var piece = document.createElement("div");
+      piece.className = "confetti" + (n % 3 === 0 ? " round" : "");
+      piece.style.background = CONFETTI_COLORS[n % CONFETTI_COLORS.length];
+      drop(piece, 2.6, 1.8);
+    }
+    if (withTacos) {
+      for (var k = 0; k < 14; k++) {
+        var taco = makeTacoSvg();
+        taco.classList.add("falling-taco", "confetti-taco");
+        drop(taco, 2.8, 1.6);
+      }
+    }
+  }
+
+  // Show or hide the congratulations box. Launch confetti only on the answer that finishes the quiz.
+  function updateQuizDone(justAnswered) {
+    var done = allRight();
+    quizDone.hidden = !done;
+    if (done && justAnswered && !wasAllRight) confetti(perfect());
+    wasAllRight = done;
+  }
+  document.getElementById("celebrateBtn").addEventListener("click", function () { confetti(perfect()); });
 
   function bubbleBurst(container) {
     if (calm()) return;
@@ -318,7 +426,9 @@
         b.textContent = t(key);
         b.addEventListener("click", function () {
           picks[qi] = key;
+          if (key !== item.right) missed[qi] = true;
           showResult(key, true);
+          updateQuizDone(true);
         });
         answers.appendChild(b);
       });
@@ -329,10 +439,20 @@
       quizList.appendChild(card);
       if (picks[qi]) showResult(picks[qi], false); // keep answers when the language changes
     });
+    updateQuizDone(false);
   }
 
   /* ---------- START ---------- */
-  if (recall("axo-paused") === "1") root.classList.add("paused");
+  var savedMotion = recall("axo-motion");
+  var urlCalm = /[?&]calm\b/.test(location.search);
+  var playedThisTab = false;
+  try { playedThisTab = sessionStorage.getItem("axo-motion-ok") === "1"; } catch (e) {}
+  // A saved "off" (or the older "paused" setting) starts the page calm
+  if (savedMotion === "off" || (savedMotion === null && recall("axo-paused") === "1")) root.classList.add("reduce-motion");
+  // ?calm in the address always starts calm. On a Reduce-motion device, keep motion on only if it was turned on in this same tab.
+  else if (reduceMotionQuery.matches && playedThisTab && !urlCalm) root.classList.add("motion-ok");
+  // A link ending in ?lang=es opens in Spanish (and ?lang=en in English), even if the visitor chose another language before
+  var linkLang = (location.search.match(/[?&]lang=(en|es)\b/) || [])[1];
   var savedLang = recall("axo-lang");
-  applyLanguage(savedLang === "es" ? "es" : "en");
+  applyLanguage(linkLang || (savedLang === "es" ? "es" : "en"));
 })();
