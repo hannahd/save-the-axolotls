@@ -27,8 +27,8 @@ window.TEXT = {
 
     "meet.title": "Meet the axolotl",
     "meet.lead": "Small animal. Big reason to protect clean water.",
-    "meet.f1t": "Never grows up (sort of)",
-    "meet.f1": "It's a salamander that keeps its feathery gills and stays in the water its whole life.",
+    "meet.f1t": "A regrowing superpower",
+    "meet.f1": "If an axolotl loses a leg or its tail, it can grow a new one! It can even regrow parts of its heart, spine, and brain.",
     "meet.f2t": "Lives in one place",
     "meet.f2": "Wild axolotls only live in the canals of Xochimilco, in Mexico City.",
     "meet.f3t": "Critically Endangered",
@@ -40,7 +40,7 @@ window.TEXT = {
     "meet.f6t": "There's hope",
     "meet.f6": "Scientists and farmers in Xochimilco are making safer, cleaner spots in the canals.",
     "words.amphibianQ": "What's an amphibian?",
-    "words.amphibianDef": "An animal like a frog or salamander with soft, damp skin. Most start life in water. Axolotls are amphibians.",
+    "words.amphibianDef": "An animal like a frog or salamander with soft, damp skin. Most start life in water. Axolotls are amphibians that keep their feathery gills and live in water their whole lives.",
     "words.habitatQ": "What's a habitat?",
     "words.habitatDef": "The home where an animal finds food, water, shelter, and space.",
 
@@ -161,10 +161,14 @@ window.TEXT = {
     "idea.ex2Sign": "Rain Garden",
 
     "quiz.title": "Quick quiz",
-    "quiz.lead": "Nothing is saved or sent anywhere.",
     "quiz.correct": "Yes!",
     "quiz.tryAgain": "Not quite.",
     "quiz.cheer": "Correct! The axolotl is smiling.",
+    "quiz.doneTitle": "Congratulations!",
+    "quiz.doneText": "You got them all right.",
+    "quiz.celebrate": "Celebrate",
+    "quiz.party": "Confetti! You got every answer right.",
+    "quiz.partyTacos": "Confetti and tacos! A perfect score with no wrong answers.",
     "quiz.q1": "If water looks clear, is it safe to drink?",
     "quiz.q1a": "Yes, always",
     "quiz.q1b": "No, not always",
@@ -192,7 +196,7 @@ window.TEXT = {
 
     "src.iucn": "Critically Endangered status and threats.",
     "src.amphibiaweb": "What axolotls are and where they live.",
-    "src.ci": "Gills, Xochimilco, and conservation status.",
+    "src.ci": "Regrowing body parts, gills, Xochimilco, and conservation status.",
     "src.mongabay": "In Spanish. Safer canal spots in Xochimilco.",
     "src.usgsQuality": "You can't judge water by looking.",
     "src.cos": "Storm drain water flows untreated to creeks.",
@@ -200,7 +204,7 @@ window.TEXT = {
     "src.psu": "Where to put a rain garden and which plants.",
     "src.restore": "Raised planter plans that inspired our idea.",
 
-    "footer.text": "Made by Dragons of the Sea. No accounts, no tracking.",
+    "footer.text": "Made by Dragons of the Sea.",
     "footer.top": "Back to top"
   },
 
@@ -224,8 +228,8 @@ window.TEXT = {
 
     "meet.title": "Conoce al ajolote",
     "meet.lead": "Un animal pequeño. Una gran razón para cuidar el agua limpia.",
-    "meet.f1t": "Nunca crece (más o menos)",
-    "meet.f1": "Es una salamandra que conserva sus branquias de plumita y vive en el agua toda su vida.",
+    "meet.f1t": "Un superpoder: volver a crecer",
+    "meet.f1": "Si un ajolote pierde una pata o la cola, ¡le vuelve a crecer! Hasta puede regenerar partes de su corazón, su columna y su cerebro.",
     "meet.f2t": "Vive en un solo lugar",
     "meet.f2": "Los ajolotes silvestres solo viven en los canales de Xochimilco, en la Ciudad de México.",
     "meet.f3t": "En Peligro Crítico",
@@ -237,7 +241,7 @@ window.TEXT = {
     "meet.f6t": "Hay esperanza",
     "meet.f6": "Científicos y agricultores de Xochimilco están creando lugares más seguros y limpios en los canales.",
     "words.amphibianQ": "¿Qué es un anfibio?",
-    "words.amphibianDef": "Un animal como la rana o la salamandra, con piel suave y húmeda. Casi todos empiezan su vida en el agua. Los ajolotes son anfibios.",
+    "words.amphibianDef": "Un animal como la rana o la salamandra, con piel suave y húmeda. Casi todos empiezan su vida en el agua. Los ajolotes son anfibios que conservan sus branquias de plumita y viven en el agua toda su vida.",
     "words.habitatQ": "¿Qué es un hábitat?",
     "words.habitatDef": "El hogar donde un animal encuentra comida, agua, refugio y espacio.",
 
@@ -358,10 +362,14 @@ window.TEXT = {
     "idea.ex2Sign": "Jardín de lluvia",
 
     "quiz.title": "Quiz rápido",
-    "quiz.lead": "No se guarda ni se envía nada.",
     "quiz.correct": "¡Sí!",
     "quiz.tryAgain": "Casi.",
     "quiz.cheer": "¡Correcto! El ajolote está sonriendo.",
+    "quiz.doneTitle": "¡Felicidades!",
+    "quiz.doneText": "Las acertaste todas.",
+    "quiz.celebrate": "Celebrar",
+    "quiz.party": "¡Confeti! Acertaste todas las respuestas.",
+    "quiz.partyTacos": "¡Confeti y tacos! Puntuación perfecta sin respuestas incorrectas.",
     "quiz.q1": "Si el agua se ve transparente, ¿es segura para beber?",
     "quiz.q1a": "Sí, siempre",
     "quiz.q1b": "No, no siempre",
@@ -389,7 +397,7 @@ window.TEXT = {
 
     "src.iucn": "Estado En Peligro Crítico y amenazas.",
     "src.amphibiaweb": "Qué son los ajolotes y dónde viven.",
-    "src.ci": "Branquias, Xochimilco y estado de conservación.",
+    "src.ci": "Regeneración, branquias, Xochimilco y estado de conservación.",
     "src.mongabay": "En español. Lugares más seguros en los canales de Xochimilco.",
     "src.usgsQuality": "No se puede juzgar el agua solo con mirarla.",
     "src.cos": "El agua de las coladeras llega sin tratar a los arroyos.",
@@ -397,7 +405,7 @@ window.TEXT = {
     "src.psu": "Dónde poner un jardín de lluvia y qué plantas usar.",
     "src.restore": "Planos de jardinera elevada que inspiraron nuestra idea.",
 
-    "footer.text": "Hecho por Dragons of the Sea. Sin cuentas, sin rastreo.",
+    "footer.text": "Hecho por Dragons of the Sea.",
     "footer.top": "Volver arriba"
   }
 };
